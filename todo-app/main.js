@@ -6,7 +6,7 @@ import './style.css'
 //function one: App function
 function app(){
 //state
-
+let state = {id: 0, todos: []}
 //ui
 let ui = {
     input:$('input'),
@@ -42,6 +42,10 @@ function add(event){
   //checking if there is a text value from the input..
   if(!text) return
   const todo = {text, completed:false, id: Date.now()};
+  //clearing the value of the todo..
+  ui.input.value = '';
+//saving the copy of your todo items..
+  state.todos.push(todo);
   ui?.todos.prepend(createTodo(todo))
 }
 
