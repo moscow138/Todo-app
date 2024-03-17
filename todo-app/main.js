@@ -20,21 +20,31 @@ return mk('div', {id:'app'}, [
         mk('h1',null, ['Todo App: John Ogheneochuko Version']),
         (ui.form = mk('form',{id:'form'}, [
         (ui.input = mk('input', {className:'todo', type:'text',id: 'todo', placeholder: 'Enter a Todo'})),
-        mk('button', {type: 'submit'}, ['Add Todo'])
+        mk('button', {type: 'submit', onclick: add}, ['Add Todo'])
     ])),
 
-    mk('ul', {id:'todos'})
+    (ui.todos = mk('ul', {id:'todos'}))
 ]);
 //create a Todo Function..
 function createTodo(todo){
-    let item;
+    let item, text;
 
     item = mk('li', {className: 'todo-item'}, [
-        mk('span', {},[todo.text])
+        (text = mk('span', {},[todo.text]))
     ]);
     return item;
 }
-createTodo({text: 'buy milk'})
+//adding li items to the ui..
+function add(event){
+
+  event.preventDefault();
+  const text = ui.input.value;
+  //checking if there is a text value from the input..
+  if(!text) return
+  const todo = {text, completed:false, id: Date.now()};
+  ui?.todos.prepend(createTodo(todo))
+}
+
 }// app() closing tag..
 
 //function two: Rendering Function
