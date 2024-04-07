@@ -98,3 +98,61 @@ function render(){
     document.body.prepend(app())
 }
 render()
+//programmatically test out the App
+function testTodoApp(root){
+    // get the current app container
+    const app = [].find.call(root.children, (child) => child.id === 'app');
+    // get the form, input, add
+    const form = app.firstElementChild;
+    const input = form.firstElementChild;
+    const add = form.lastElementChild;
+    // create a loop to create 1000 todos
+    for(let eachTodo = 0; eachTodo < 1000; eachTodo++){
+         // create input.value
+    input.value = `Todo ${eachTodo}`;
+    // trigger the change and click event
+    input.dispatchEvent(new Event('change'));
+    add.dispatchEvent(new Event('click'));
+    }
+   
+    // get all li
+    const allTodo = [].slice.call(app.lastElementChild.children);
+    // Delete all todos with another loop
+    for(eachTodo = 0; eachTodo < 1000; eachTodo ++){
+        //get the todo
+        const todo = allTodo[eachTodo];
+        // update the todo text
+        todo.firstElementChild.dispatchEvent(new Event('dbclick'));
+        todo.firstElementChild.value += `updated`;
+        todo.firstElementChild.dispatchEvent(
+            Object.assign(new Event('keydown'), {key: 'Enter'})
+
+        );
+        // checking for update...
+        if(!/updated/.test(todo.firstElementChild.textContent)){
+            throw new Error(`Todo was not updated!`);
+        }
+        // get the delete button..
+        const deleteButton = todo.lastElementChild;
+        // triger the click event..
+        deleteButton.dispatchEvent(new Event('click'));
+    }
+
+}
+let time;
+document.body.prepend(
+    mk('div', {
+        style:'position:fixed; bottom: 0; left: 0; background: #333; color: #fff; padding 1rem; display: flex; justify-content: space-between;'
+    }, [
+    mk('button', {
+        onclick(){
+            const start = performance.now()
+            testTodoApp(document.body)
+            const end = performance.now()
+            TimeRanges.textContent = `${end - start}ms`
+        }
+
+    }, ['Run Test']),
+    (time = mk('time', {}, ['0ms']))
+    ])
+)
